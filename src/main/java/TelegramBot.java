@@ -143,7 +143,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
-    //переделать логику, теперь из апдейта захватываем айди юзера
     @SneakyThrows
     public void handleMessage(Message message, User user) {
 
@@ -151,7 +150,6 @@ public class TelegramBot extends TelegramLongPollingBot {
             Optional<MessageEntity> commandEntity =
                     message.getEntities().stream().filter(e -> "bot_command".equals(e.getType())).findFirst();
 
-            //нужна ли тут проверка состояния бота?
             if (commandEntity.isPresent() && botState == BotStates.FREEMINDED) {
                 String command = message
                         .getText()
@@ -168,7 +166,6 @@ public class TelegramBot extends TelegramLongPollingBot {
                         users.add(new User(message.getChatId(), BotStates.FREEMINDED));
                         return;
 
-                    //остановился тут
                     case "/set_new_reminder":
                         new Handler().setNewReminderHandler(message);
                         setStateForUser(message, BotStates.WAIT_FOR_REMINDER);
@@ -219,7 +216,6 @@ public class TelegramBot extends TelegramLongPollingBot {
                     text("Готово").
                     chatId(message.getChatId().toString()).
                     build());
-            //Нужна ли установка стейта??
             //botState = BotStates.FREEMINDED;
         } else if (message.getText().equals("Удалить одно из напоминаний")) {
             execute(SendMessage.builder().
@@ -280,7 +276,6 @@ public class TelegramBot extends TelegramLongPollingBot {
                         chatId(message.getChatId().toString()).
                         build());
             }
-            //reminderToAdd = null;
         }
 
         else if (message.hasText() && user.getState() == BotStates.WAIT_FOR_NUMBER) {
@@ -295,7 +290,6 @@ public class TelegramBot extends TelegramLongPollingBot {
                         build());
                 setStateForUser(message, BotStates.FREEMINDED);
 
-//замена                botState = BotStates.FREEMINDED;
             } catch (Exception e) {
                 e.printStackTrace();
                 execute(SendMessage.builder().
